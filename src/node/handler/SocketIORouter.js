@@ -1,5 +1,5 @@
 /**
- * This is the Socket.IO Router. It routes the Messages between the 
+ * This is the Socket.IO Router. It routes the Messages between the
  * components of the Server. The components are at the moment: pad and timeslider
  */
 
@@ -31,11 +31,11 @@ var settings = require('../utils/Settings');
  * Saves all components
  * key is the component name
  * value is the component module
- */ 
+ */
 var components = {};
 
 var socket;
- 
+
 /**
  * adds a component
  */
@@ -43,7 +43,7 @@ exports.addComponent = function(moduleName, module)
 {
   //save the component
   components[moduleName] = module;
-  
+
   //give the module the socket
   module.setSocketIO(socket);
 }
@@ -54,7 +54,7 @@ exports.addComponent = function(moduleName, module)
 exports.setSocketIO = function(_socket) {
   //save this socket internaly
   socket = _socket;
-  
+
   socket.sockets.on('connection', function(client)
   {
 
@@ -68,18 +68,18 @@ exports.setSocketIO = function(_socket) {
       remoteAddress[client.id] = client.handshake.address;
     }
     var clientAuthorized = false;
-    
+
     //wrap the original send function to log the messages
     client._send = client.send;
     client.send = function(message) {
       messageLogger.debug("to " + client.id + ": " + stringifyWithoutPassword(message));
       client._send(message);
     }
-  
+
     //tell all components about this connect
     for(var i in components) {
       components[i].handleConnect(client);
-    } 
+    }
 
     client.on('message', function(message)
     {
@@ -113,6 +113,14 @@ exports.setSocketIO = function(_socket) {
               securityManager.checkAccess (value, message.sessionID, message.token, message.password, checkAccessCallback);
             });
           } else {
+            console.log('message.padId')
+            console.log(message.padId)
+            console.log('message.sessionID')
+            console.log(message.sessionID)
+            console.log('message.token')
+            console.log(message.token)
+            console.log('message.password')
+            console.log(message.password)
             //this message has everything to try an authorization
             securityManager.checkAccess (message.padId, message.sessionID, message.token, message.password, checkAccessCallback);
           }
@@ -146,14 +154,14 @@ function handleMessage(client, message)
   } else {
     messageLogger.error("Can't route the message:" + stringifyWithoutPassword(message));
   }
-} 
+}
 
 //returns a stringified representation of a message, removes the password
 //this ensures there are no passwords in the log
 function stringifyWithoutPassword(message)
 {
   var newMessage = {};
-  
+
   for(var i in message)
   {
     if(i == "password" && message[i] != null)
@@ -161,6 +169,6 @@ function stringifyWithoutPassword(message)
     else
       newMessage[i]=message[i];
   }
-  
+
   return JSON.stringify(newMessage);
 }

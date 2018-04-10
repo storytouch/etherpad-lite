@@ -240,6 +240,8 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
       //- a valid session for this group is avaible AND pad exists
       if(validSession && padExists)
       {
+        console.log('validSession')
+        console.log(validSession)
         //- the pad is not password protected
         if(!isPasswordProtected)
         {
