@@ -223,8 +223,10 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
         isPasswordProtected = pad.isPasswordProtected();
 
         //is password correct?
-        console.log('pad.isCorrectPassword(password)')
-        console.log(pad.isCorrectPassword(password))
+        console.log('isPasswordProtected')
+        console.log(isPasswordProtected)
+        console.log('password')
+        console.log(password)
         if(isPasswordProtected && password && pad.isCorrectPassword(password))
         {
           passwordStatus = "correct";
