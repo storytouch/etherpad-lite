@@ -177,7 +177,10 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
               //is validUntil still ok?
               if(sessionInfo.validUntil <= now)
               {
+
                 console.log('sessionInfo.validUntil <= now')
+                console.log('sessionInfo')
+                console.log(sessionInfo)
                 authLogger.debug("Auth failed: validUntil");
                 callback();
                 return;
