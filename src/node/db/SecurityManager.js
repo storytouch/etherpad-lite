@@ -33,13 +33,21 @@ var authLogger = log4js.getLogger("auth");
  * @param padID the pad the user wants to access
  * @param sessionCookie the session the user has (set via api)
  * @param token the token of the author (randomly generated at client side, used for public pads)
- * @param password the password the user has given to access this pad, can be null 
+ * @param password the password the user has given to access this pad, can be null
  * @param callback will be called with (err, {accessStatus: grant|deny|wrongPassword|needPassword, authorID: a.xxxxxx})
- */ 
+ */
 exports.checkAccess = function (padID, sessionCookie, token, password, callback)
-{ 
+{
+  console.log('padID')
+  console.log(padID)
+  console.log('sessionCookie')
+  console.log(sessionCookie)
+  console.log('token')
+  console.log(token)
+  console.log('password')
+  console.log(password)
   var statusObject;
-  
+
   if(!padID) {
     callback(null, {accessStatus: "deny"});
     return;
@@ -51,6 +59,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
     // without sessionCookie, access is denied
     if(!sessionCookie)
     {
+      console.log('has no sessionCookie')
       callback(null, {accessStatus: "deny"});
       return;
     }
@@ -65,7 +74,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
       authorManager.getAuthor4Token(token, function(err, author)
       {
         if(ERR(err, callback)) return;
-        
+
         // assume user has access
         statusObject = {accessStatus: "grant", authorID: author};
         // user can't create pads
@@ -75,7 +84,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
           padManager.doesPadExists(padID, function(err, exists)
           {
             if(ERR(err, callback)) return;
-            
+
             // pad doesn't exist - user can't have access
             if(!exists) statusObject.accessStatus = "deny";
             // grant or deny access, with author of token
@@ -89,13 +98,15 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
           callback(null, statusObject);
         }
       });
-      
+
       //don't continue
       return;
     }
   }
-   
+
   var groupID = padID.split("$")[0];
+  console.log('-------------------------padID-------------------------')
+  console.log(padID)
   var padExists = false;
   var validSession = false;
   var sessionAuthor;
@@ -105,7 +116,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
   var passwordStatus = password == null ? "notGiven" : "wrong"; // notGiven, correct, wrong
 
   async.series([
-    //get basic informations from the database 
+    //get basic informations from the database
     function(callback)
     {
       async.parallel([
@@ -127,7 +138,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
             callback();
             return;
           }
-          
+
           var sessionIDs = sessionCookie.split(',');
           async.forEach(sessionIDs, function(sessionID, callback)
           {
@@ -140,19 +151,23 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
                 callback();
                 return;
               }
-              
+
               if(ERR(err, callback)) return;
-              
+
               var now = Math.floor(new Date().getTime()/1000);
-              
+
               //is it for this group?
               if(sessionInfo.groupID != groupID)
               {
+                console.log('sessionInfo.groupID')
+                console.log(sessionInfo.groupID)
+                console.log('groupID')
+                console.log(groupID)
                 authLogger.debug("Auth failed: wrong group");
                 callback();
                 return;
               }
-              
+
               //is validUntil still ok?
               if(sessionInfo.validUntil <= now)
               {
@@ -160,11 +175,11 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
                 callback();
                 return;
               }
-              
+
               // There is a valid session
               validSession = true;
               sessionAuthor = sessionInfo.authorID;
-              
+
               callback();
             });
           }, callback);
@@ -175,6 +190,11 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
           //get author for this token
           authorManager.getAuthor4Token(token, function(err, author)
           {
+            console.log('authorManager.getAuthor4Token(token, function(err, author)')
+            console.log('err')
+            console.log(err)
+            console.log('author')
+            console.log(author)
             if(ERR(err, callback)) return;
             tokenAuthor = author;
             callback();
@@ -186,28 +206,30 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
     function(callback)
     {
       //skip this if the pad doesn't exists
-      if(padExists == false) 
+      if(padExists == false)
       {
         callback();
         return;
       }
-      
+
       padManager.getPad(padID, function(err, pad)
       {
         if(ERR(err, callback)) return;
-        
+
         //is it a public pad?
         isPublic = pad.getPublicStatus();
-        
+
         //is it password protected?
         isPasswordProtected = pad.isPasswordProtected();
-        
+
         //is password correct?
+        console.log('pad.isCorrectPassword(password)')
+        console.log(pad.isCorrectPassword(password))
         if(isPasswordProtected && password && pad.isCorrectPassword(password))
         {
           passwordStatus = "correct";
         }
-        
+
         callback();
       });
     },
@@ -250,7 +272,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
         {
           throw new Error("Ops, something wrong happend");
         }
-      } 
+      }
       //- a valid session for this group avaible but pad doesn't exists
       else if(validSession && !padExists)
       {
@@ -278,7 +300,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
           //--> grant access, with author of token
           statusObject = {accessStatus: "grant", authorID: tokenAuthor};
         }
-        //- its public and the pad is password protected but wrong password given 
+        //- its public and the pad is password protected but wrong password given
         else if(isPublic && isPasswordProtected && passwordStatus == "wrong")
         {
           //--> deny access, ask for new password and tell them that the password is wrong
@@ -301,7 +323,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
         {
           throw new Error("Ops, something wrong happend");
         }
-      }    
+      }
       // there is no valid session avaiable AND pad doesn't exists
       else
       {
@@ -309,7 +331,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
          //--> deny access
          statusObject = {accessStatus: "deny"};
       }
-      
+
       callback();
     }
   ], function(err)
