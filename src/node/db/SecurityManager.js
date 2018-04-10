@@ -56,6 +56,10 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
   // a valid session is required (api-only mode)
   if(settings.requireSession)
   {
+    console.log('if do settings.requireSession')
+    console.log(settings.requireSession)
+    console.log('sessionCookie')
+    console.log(sessionCookie)
     // without sessionCookie, access is denied
     if(!sessionCookie)
     {
@@ -140,6 +144,8 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
           }
 
           var sessionIDs = sessionCookie.split(',');
+          console.log('----------------sessionIDs--------------')
+          console.log(sessionIDs)
           async.forEach(sessionIDs, function(sessionID, callback)
           {
             sessionManager.getSessionInfo(sessionID, function(err, sessionInfo)
@@ -171,6 +177,7 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
               //is validUntil still ok?
               if(sessionInfo.validUntil <= now)
               {
+                console.log('sessionInfo.validUntil <= now')
                 authLogger.debug("Auth failed: validUntil");
                 callback();
                 return;
@@ -180,6 +187,9 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
               validSession = true;
               sessionAuthor = sessionInfo.authorID;
 
+              console.log('chama o callback')
+              console.log(callback)
+              console.log('-----------------------')
               callback();
             });
           }, callback);
