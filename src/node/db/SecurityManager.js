@@ -38,6 +38,7 @@ var authLogger = log4js.getLogger("auth");
  */
 exports.checkAccess = function (padID, sessionCookie, token, password, callback)
 {
+  console.log('-------------------checkAccess-------------------')
   console.log('padID')
   console.log(padID)
   console.log('sessionCookie')
@@ -71,12 +72,15 @@ exports.checkAccess = function (padID, sessionCookie, token, password, callback)
   // a session is not required, so we'll check if it's a public pad
   else
   {
+    console.log('else settings.requireSession')
     // it's not a group pad, means we can grant access
     if(padID.indexOf("$") == -1)
     {
       //get author for this token
       authorManager.getAuthor4Token(token, function(err, author)
       {
+        console.log('err authorManager.getAuthor4Token')
+        console.log(err)
         if(ERR(err, callback)) return;
 
         // assume user has access

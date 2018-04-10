@@ -200,8 +200,6 @@ exports.getSessionInfo = function(sessionID, callback)
     //everything is fine, return the sessioninfos
     else
     {
-      console.log('------------------session from db------------------')
-      console.log(session)
       callback(null, session);
     }
   });
