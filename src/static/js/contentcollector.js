@@ -1,5 +1,5 @@
 /**
- * This code is mostly from the old Etherpad. Please help us to comment this code. 
+ * This code is mostly from the old Etherpad. Please help us to comment this code.
  * This helps other people to understand this code better and helps them to improve it.
  * TL;DR COMMENTS ON THIS FILE ARE HIGHLY APPRECIATED
  */
@@ -252,14 +252,14 @@ function makeContentCollector(collectStyles, abrowser, apool, domInterface, clas
     {
       state.listNesting = (state.listNesting || 0) + 1;
     }
-    
+
     if(listType === 'none' || !listType ){
-      delete state.lineAttributes['list']; 
+      delete state.lineAttributes['list'];
     }
     else{
       state.lineAttributes['list'] = listType;
     }
-    
+
     _recalcAttribString(state);
     return oldListType;
   }
@@ -303,7 +303,7 @@ function makeContentCollector(collectStyles, abrowser, apool, domInterface, clas
         // see https://github.com/ether/etherpad-lite/issues/2567 for more information
         // in long term the contentcollector should be refactored to get rid of this workaround
         var ATTRIBUTE_SPLIT_STRING = "::";
-        
+
         // see if attributeString is splittable
         var attributeSplits = a.split(ATTRIBUTE_SPLIT_STRING);
         if (attributeSplits.length > 1) {
@@ -410,7 +410,7 @@ function makeContentCollector(collectStyles, abrowser, apool, domInterface, clas
         text:txt,
         styl: null,
         cls: null
-      });  
+      });
       var txt = (typeof(txtFromHook)=='object'&&txtFromHook.length==0)?dom.nodeValue(node):txtFromHook[0];
 
       var rest = '';
@@ -504,7 +504,7 @@ function makeContentCollector(collectStyles, abrowser, apool, domInterface, clas
           tvalue:tvalue,
           styl: null,
           cls: null
-        });       
+        });
         var startNewLine= (typeof(induceLineBreak)=='object'&&induceLineBreak.length==0)?true:induceLineBreak[0];
         if(startNewLine){
           cc.startNewLine(state);
@@ -715,7 +715,7 @@ function makeContentCollector(collectStyles, abrowser, apool, domInterface, clas
     function fixLongLines()
     {
       // design mode does not deal with with really long lines!
-      var lineLimit = 2000; // chars
+      var lineLimit = 20000; // chars
       var buffer = 10; // chars allowed over before wrapping
       var linesWrapped = 0;
       var numLinesAfter = 0;
