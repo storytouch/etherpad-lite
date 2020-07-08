@@ -3945,7 +3945,7 @@ function Ace2Inner(){
           toggleAttributeOnSelection('underline');
           specialHandled = true;
         }
-        if ((!specialHandled) && isTypeForCmdKey && String.fromCharCode(which).toLowerCase() == "5" && (evt.metaKey || evt.ctrlKey) && evt.altKey !== true && padShortcutEnabled.cmd5)
+        if ((!specialHandled) && isTypeForCmdKey && String.fromCharCode(which).toLowerCase() == "k" && (evt.metaKey || evt.ctrlKey) && padShortcutEnabled.cmdK)
         {
           // cmd-5 (strikethrough)
           fastIncorp(13);

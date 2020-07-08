@@ -128,6 +128,7 @@ exports.padShortcutEnabled = {
   "cmdY" : true,
   "cmdB" : true,
   "cmdI" : true,
+  "cmdK" : true,
   "cmdU" : true,
   "cmd5" : true,
   "cmdShiftL" : true,
