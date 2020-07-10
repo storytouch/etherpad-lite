@@ -49,6 +49,7 @@ body {
 
 @media only screen and (max-width: 800px) {
   #editorcontainerbox {
-    margin-bottom: 39px; /* Leave space for the bottom toolbar on mobile */
+    /* XXX: remove this space */
+    /* margin-bottom: 39px; /1* Leave space for the bottom toolbar on mobile *1/ */
   }
 }
