@@ -82,17 +82,17 @@ async function aCallAll(hook_name, args, cb) {
   if (!cb) cb = function () {};
   if (exports.plugins.hooks[hook_name] === undefined) return cb(null, []);
 
-  var newArray = [];
   // This should be a map.
-  await exports.plugins.hooks[hook_name].forEach(async function(hook, index){
-    let test = await hookCallWrapper(hook, hook_name, args, function (res) {
+  var promises = exports.plugins.hooks[hook_name].map(async function(hook, index){
+    return  await hookCallWrapper(hook, hook_name, args, function (res) {
       return Promise.resolve(res);
     });
-    newArray.push(test)
   });
 
+  var result = await Promise.all(promises);
+
   // after forEach
-  cb(null, _.flatten(newArray, true));
+  cb(null, _.flatten(result, true));
 }
 
 /* return a Promise if cb is not supplied */
