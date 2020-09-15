@@ -142,8 +142,13 @@ version["1.2.14"] = Object.assign({}, version["1.2.13"],
   }
 );
 
+version["1.2.15"] = Object.assign({}, version["1.2.14"],
+  { "copyPadWithoutHistory"    : ["sourceID", "destinationID", "force"]
+  }
+);
+
 // set the latest available API version here
-exports.latestApiVersion = '1.2.14';
+exports.latestApiVersion = '1.2.15';
 
 // exports the versions so it can be used by the new Swagger endpoint
 exports.version = version;
@@ -193,3 +198,4 @@ exports.handle = async function(apiVersion, functionName, fields, req, res)
   // call the api function
   return api[functionName].apply(this, functionParams);
 }
+
