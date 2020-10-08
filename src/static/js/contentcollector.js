@@ -791,7 +791,7 @@ function makeContentCollector(collectStyles, abrowser, apool, domInterface, clas
     function fixLongLines()
     {
       // design mode does not deal with with really long lines!
-      var lineLimit = 2000; // chars
+      var lineLimit = 20000; // chars
       var buffer = 10; // chars allowed over before wrapping
       var linesWrapped = 0;
       var numLinesAfter = 0;
