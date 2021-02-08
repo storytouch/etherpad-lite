@@ -112,6 +112,7 @@ exports.dbType = "dirty";
  * This setting is passed with dbType to ueberDB to set up the database
  */
 exports.dbSettings = { "filename" : path.join(exports.root, "var/dirty.db") };
+exports.dbWrapperSettings = { };
 
 /**
  * The default Text of a new pad
