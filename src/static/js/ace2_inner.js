@@ -5266,8 +5266,8 @@ function Ace2Inner(){
     // Apply height to existing sidediv lines
     currentLine = 0
     while (sidebarLine && currentLine <= lineNumbersShown) {
-      if (lineHeights[currentLine]) {
-        sidebarLine.style.height = lineHeights[currentLine] + "px";
+      if (lineHeights[currentLine] != null) {
+        sidebarLine.style.height = `${lineHeights[currentLine]}px`;
       }
       sidebarLine = sidebarLine.nextSibling;
       currentLine++;
